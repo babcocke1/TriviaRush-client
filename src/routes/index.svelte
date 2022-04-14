@@ -15,8 +15,8 @@
         // send a message to the server
         // socket.emit("message", m);
         console.log(m);
-        play += 'y';
-        // window.location.href = "/loading";
+        // play += 'y';
+        window.location.href = "/loading";
     }
     
 </script>
