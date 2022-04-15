@@ -23,7 +23,7 @@
 <body class="Aligner">
     <div class="">
         <div class="container mx-auto">  
-            <img src="title.png" alt="Trivia Rush Logo">
+            <img src="title.png" alt="Trivia Rush Logo" class="mx-auto">
         </div>
             <div class="container mx-auto  ">
             <div class="form-control  w-full max-w-xs mx-auto">
