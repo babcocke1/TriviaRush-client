@@ -22,7 +22,7 @@
 </script>
 <body class="Aligner">
     <div class="">
-        <div class="">  
+        <div class="container mx-auto">  
             <img src="title.png" alt="Trivia Rush Logo">
         </div>
             <div class="container mx-auto  ">
