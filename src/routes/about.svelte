@@ -9,7 +9,6 @@
         praesentium culpa facere. Quisquam, quasi facere!
     </p>
 </div>
-
 <style>
     .about {
         text-align: center;

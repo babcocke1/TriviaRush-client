@@ -22,10 +22,10 @@
 </script>
 <body class="Aligner">
     <div class="">
-        <div>
+        <div class="">  
             <img src="title.png" alt="Trivia Rush Logo">
         </div>
-        <div class="container mx-auto  ">
+            <div class="container mx-auto  ">
             <div class="form-control  w-full max-w-xs mx-auto">
                 <form class="label max-w-sm mx-auto" id="form1" on:submit|preventDefault>
                     <input type="text" placeholder="What should we call you" 
