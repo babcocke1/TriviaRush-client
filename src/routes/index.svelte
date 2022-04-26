@@ -1,22 +1,33 @@
 <script>
+    import { browser } from '$app/env';
+    import { socketStore } from "../stores";
+    import { checkName } from "../homePageHelpers"
     import '../app.css';
-    import 'path'
-    let play = "play";
-    export const loadNextPage = () => {}
+    import { onMount } from "svelte";
+    import { goto } from '$app/navigation';
     
-    let m = "ayooo";
+    
+    // bind to text input
+    let name = "";
+    let playerObject = {};
+    let socket;
+    socketStore.subscribe(sock => {socket = sock});
+    onMount(() => {
+        // onStartHomePage();    
+    })
+    let playGame = () => {
+        if(!checkName(name)) {
+            browser && alert("-- Name must start with a letter\n" +
+            "-- Name must be 3-12 characters\n" + 
+            "-- Name can include numbers and underscores")
+        }  
+        else {
+            playerObject.name = name;
+            // socket.emit("enterQueue", playerObject);
+            socket.emit("enterQueue", playerObject);
 
-    // socketio
-    // import { io } from "socket.io-client";
-
-    // const socket = io("localhost:5000");
-
-    let sendMessage = () => {
-        // send a message to the server
-        // socket.emit("message", m);
-        console.log(m);
-        // play += 'y';
-        window.location.href = "/loading";
+            goto("loading");
+        }
     }
     
 </script>
@@ -29,8 +40,8 @@
             <div class="form-control  w-full max-w-xs mx-auto">
                 <form class="label max-w-sm mx-auto" id="form1" on:submit|preventDefault>
                     <input type="text" placeholder="What should we call you" 
-                        class="input input-bordered "> 
-                    <button class="btn btn-ghost prompt border min-w-100" on:click={sendMessage} >{play}</button>
+                        class="input input-bordered " bind:value={name} > 
+                    <button class="btn btn-ghost prompt border min-w-100" on:click={playGame} >play</button>
                 </form >
             </div>
         </div>

@@ -1,30 +1,52 @@
 <script>
+    import { socketStore } from "../stores" 
     import { onMount } from 'svelte';
     import '../app.css';
+    import { browser } from "$app/env";
 
-    let angle = "0deg";
-    let angleNum = 0;
+    let matchStarting = false;
+    let countdown = 3;
+
+    let socket;
+    socketStore.subscribe(sock => socket = sock)
+    
+    let start = false;
+    // initialize ui stuff
+    let angle = "0deg"; // angle for background gradient
+
+    let angleNum = 0; // num for changing angle
+    
     let colors = [
         "#6D7CFF",
         "#F54968",
         "#51087e",
         "#fe7f9c"
     ];
-    let index = 1;
-    $: dots = 0;
-    let loading
-    let color1 = colors[(index-1)%4];
+    
+    let index = 1; // index used to pick colors for background
+    
+    $: dots = 0; // num of dots on loading screen
+    $: searching = "searching for <br>a match" + ".".repeat(dots);
+    
+    let matchString = "Match Starting:";
+    let color1 = colors[(index-1)%4]; // two colors on display at all times
     let color2 = colors[index%4];
     
-    let percent1num = 25;
+    // percents for gradient
+
+    let percent1num = 25; 
     let percent2num = 75;
     let percent1 = "25%";
     let percent2 = "75%";
-    let count = 0
+    let count = 0;
     percent1 = percent1num.toString() + "%"
     percent2 = percent2num.toString() + "%"
+    
+    
+    let interval;
     onMount(() => {
-        setInterval(() => {
+        console.log("gello?")
+        interval = setInterval(() => {
             angleNum += .33;
             angle = angleNum.toString() + "deg";
             percent1num -= .7;
@@ -32,7 +54,7 @@
             percent1 = percent1num.toString() + "%"
             percent2 = percent2num.toString() + "%"
             count += 1
-            if (count == 30) {
+            if (count >= 30) {
                 dots = (dots + 1) % 4;
                 count = 0;
             }
@@ -53,7 +75,14 @@
                 index = index%4;
                 color2 = colors[index];
             }
-            setBackground();
+            try {
+                setBackground();
+            } catch {
+                
+                browser && console.log("why is this shit running?")
+                !browser && console.log("this shit on the server server")
+                clearInterval(interval)
+            }
         }, 20);
     });
     let setBackground;
@@ -65,14 +94,33 @@
             background.style.setProperty("--angle", angle);
             background.style.setProperty("--percent1", percent1);
             background.style.setProperty("--percent2", percent2);
-
         }
     });
 
+    export const onStart = {
+        toggl() {
+        matchStarting = true;
+        setTimeout(() => {
+            countdown -1;
+        }, 1000);
+        setTimeout(() => {
+            countdown -1;
+        }, 2000);
+    }
+
+    };
+    export const test = {};
 </script>
 
 <body>
-    <h1 class="Loading mx-auto">searching for <br>a match{".".repeat(dots)}</h1>
+    {#if !matchStarting}
+        <h1 class="Loading mx-auto">{@html searching}</h1>
+    {:else}
+    <h1 class="Loading mx-auto">{@html matchString} {countdown}</h1>
+        
+    {/if}
+    <!-- <button on:click={onPress}>yooooo</button> -->
+    <!-- <h1>hi{storeVal}</h1> -->
 </body>
 
 <div class="bg" id="background"></div>
