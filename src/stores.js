@@ -5,7 +5,7 @@ import { readable } from "svelte/store";
 
 export const socketStore = readable({}, set => {
     if (browser) {
-        const socket = io("ws://localhost:5000");
+        const socket = io("https://trivia-rush-gameserver.herokuapp.com/");
         set(socket);
         
         return () => { socket.close() };
