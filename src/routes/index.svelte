@@ -32,15 +32,15 @@
         }  
         else {
             console.log("ayo")
-            let sock = io("trivia-rush-gameserver.herokuapp.com/");
+            let sock = io("https://trivia-rush-gameserver.herokuapp.com/");
             // let sock = io("ws://localhost:5000");
-            sock.emit("message", "connection");
+            sock.emit("message", "client?");
             socketStore.set(sock);
             let s = {};
             socketStore.subscribe(socket => s = socket);
             let numTries = 0;
             while (!s.connected && numTries <= 10){
-                await new Promise(r => setTimeout(r, .200));
+                await new Promise(r => setTimeout(r, 200));
                 numTries += 1
             }
             if (!s.connected) {
