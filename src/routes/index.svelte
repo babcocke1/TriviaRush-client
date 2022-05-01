@@ -31,7 +31,8 @@
             "-- Name can include numbers and underscores")
         }  
         else {
-            const sock = io("https://trivia-rush-gameserver.herokuapp.com/");
+            console.log("ayo")
+            let sock = io("trivia-rush-gameserver.herokuapp.com/");
             // let sock = io("ws://localhost:5000");
             sock.emit("message", "connection");
             socketStore.set(sock);
