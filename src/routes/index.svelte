@@ -1,19 +1,28 @@
 <script>
     import { browser } from '$app/env';
-    import { socketStore } from "../stores";
     import { checkName } from "../homePageHelpers"
     import '../app.css';
+    import { socketStore } from "../stores"
     import { onMount } from "svelte";
     import { goto } from '$app/navigation';
-    
-    
-    // bind to text input
+    import { initializeSocketStuff } from "../socketHelpers"
+    // import { socket } from "../socketHelpers"
+    import { io } from "socket.io-client";
+    // import { socketStore } from '../stores';
+    let socket;
+    socketStore.subscribe((sock) => socket = sock);
+    // bind to text input   
     let name = "";
     let playerObject = {};
-    let socket;
-    socketStore.subscribe(sock => {socket = sock});
     onMount(() => {
-        // onStartHomePage();    
+        if (browser) {
+                // socket = io("ws://localhost:5000");
+                // socket.emit("message", "peni")
+                // // socketStore.set(socket);
+                // // console.log(socket.id);
+                // console.log(socket)
+                // console.log("hello");
+            }
     })
     let playGame = () => {
         if(!checkName(name)) {
@@ -23,8 +32,10 @@
         }  
         else {
             playerObject.name = name;
-            // socket.emit("enterQueue", playerObject);
+            initializeSocketStuff(socket);
             socket.emit("enterQueue", playerObject);
+                        
+            console.log(playerObject);
 
             goto("loading");
         }

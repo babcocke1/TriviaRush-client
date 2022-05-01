@@ -1,37 +1,32 @@
 import { writable } from 'svelte/store';
 import { browser } from '$app/env';
-import { io } from "socket.io-client";
 import { readable } from "svelte/store";
+import { io } from "socket.io-client"
+// export const socketStore = writable({});
+
+export const stateStore = writable({
+    currentState: "None",
+    you: {},
+    opponent: {},
+    text: {},
+    answers: {},
+    number: {}
+});
 
 export const socketStore = readable({}, set => {
     if (browser) {
-        const socket = io("https://trivia-rush-gameserver.herokuapp.com/");
-        set(socket);
-        
+        const socket = io("ws://localhost:5000");
+        socket.emit("message", "connection");
+        set(socket)
         return () => { socket.close() };
     }
-    else return () => {};
+    return () => {};
 });
 
-export const state = writable({});
-
-
-// export const player = writable(
-//     let socket;
-//     if (browser) {
-//         socket = io("ws://localhost:5000");
-//         socket.on("start", () => {
-//             console.log("startGame!")
-//         }
-//     }
-//     } 
+// export const opponent = writable(
+//     browser && (sessionStorage.getItem("opponent")) || ""
 // )
-// player.subscribe((val) => browser && sessionStorage.setItem("player", val));
-
-export const opponent = writable(
-    browser && (sessionStorage.getItem("opponent")) || ""
-)
-opponent.subscribe((val) => browser && sessionStorage.setItem("opponent", val));
+// opponent.subscribe((val) => browser && sessionStorage.setItem("opponent", val));
 
 // export const setPlayer = (value) => {
 //     player.update(() => {return value});

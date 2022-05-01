@@ -1,16 +1,24 @@
 <script>
-    import { socketStore } from "../stores" 
+    // import { socketStore } from "../stores" 
     import { onMount } from 'svelte';
     import '../app.css';
+    import { stateStore } from "../stores";
     import { browser } from "$app/env";
 
     let matchStarting = false;
+    let opponentName
+    let stateVal;
+    stateStore.subscribe((value) => stateVal = value);
+    $: console.log(stateVal)
+    $: if (browser && stateVal.currentState === "MatchFound") {
+        console.log("ayooo")
+        matchStarting = true;
+        opponentName = stateVal.opponent.name;
+    } 
     let countdown = 3;
 
-    let socket;
-    socketStore.subscribe(sock => socket = sock)
+    // socketStore.subscribe(sock => socket = sock)
     
-    let start = false;
     // initialize ui stuff
     let angle = "0deg"; // angle for background gradient
 
@@ -28,7 +36,7 @@
     $: dots = 0; // num of dots on loading screen
     $: searching = "searching for <br>a match" + ".".repeat(dots);
     
-    let matchString = "Match Starting:";
+    let matchString = "Match Starting:<br>";
     let color1 = colors[(index-1)%4]; // two colors on display at all times
     let color2 = colors[index%4];
     
@@ -78,9 +86,7 @@
             try {
                 setBackground();
             } catch {
-                
-                browser && console.log("why is this shit running?")
-                !browser && console.log("this shit on the server server")
+                // stop the animation on navigate to other page.
                 clearInterval(interval)
             }
         }, 20);
@@ -116,7 +122,7 @@
     {#if !matchStarting}
         <h1 class="Loading mx-auto">{@html searching}</h1>
     {:else}
-    <h1 class="Loading mx-auto">{@html matchString} {countdown}</h1>
+        <h1 class="Loading mx-auto">{@html matchString} {opponentName}</h1>
         
     {/if}
     <!-- <button on:click={onPress}>yooooo</button> -->
