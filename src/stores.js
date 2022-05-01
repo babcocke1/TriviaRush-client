@@ -15,8 +15,8 @@ export const stateStore = writable({
 
 export const socketStore = writable({}, set => {
     if (browser) {
-        // const socket = io("https://trivia-rush-gameserver.herokuapp.com/");
-        const socket = io("ws://localhost:5000");
+        const socket = io("https://trivia-rush-gameserver.herokuapp.com/");
+        // const socket = io("ws://localhost:5000");
 
         socket.emit("message", "connection");
         set(socket)
