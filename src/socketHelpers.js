@@ -1,7 +1,8 @@
 import { goto } from "$app/navigation";
-import { stateStore } from "./stores";
+import { socketStore, stateStore } from "./stores";
+import { get } from "svelte/store";
 import { browser } from "$app/env";
-import { io } from "socket.io-client";
+import { Socket } from "socket.io-client";
 // let sock;
 // if (browser) {
 //     sock = io("ws://localhost:5000");
@@ -10,7 +11,6 @@ import { io } from "socket.io-client";
 // export const socket = sock;
 
 export const initializeSocketStuff = (socket) => {
-    socket.on("*", (c) => console.log(c))
     socket.on("startgame", (question) => {
         console.log("startgame");
         let stateVal = {
@@ -61,6 +61,41 @@ export const initializeSocketStuff = (socket) => {
         number: ""
     };
     stateStore.set(stateVal);
-    goto("gameOver");
+    goto("gameover");
     });
+    socket.on("gameended", (question) => {
+        goto("")
+        socket.disconnect();
+        alert("game disconnected");
+        goto("")
+
+    });
+    socket.on("disconnect", (question) => {
+        goto("/")
+        socket.disconnect();
+        console.log("opponent disconnected")
+        goto("/")
+
+    });
+};
+
+export const answerQuestion = (socket, answer, number) => {
+    let playerResponse = {}
+    playerResponse.playerChoice = answer;
+    playerResponse.number = number;
+    console.log(playerResponse)
+    socket.emit("answer", playerResponse);
+}
+
+export const isValidGame = async () => {
+    let socket = {};
+    socketStore.subscribe(s => socket=s)
+    if (socket.hasOwnProperty("connected") && socket.connected) {
+        return true;
+    }
+    else {
+        goto("/")
+        alert("Not connected to server")
+        return false;
+    }
 }

@@ -10,7 +10,6 @@
     import { io } from "socket.io-client";
     // import { socketStore } from '../stores';
     let socket;
-    socketStore.subscribe((sock) => socket = sock);
     // bind to text input   
     let name = "";
     let playerObject = {};
@@ -24,23 +23,38 @@
                 // console.log("hello");
             }
     })
-    let playGame = () => {
+
+    let playGame = async () => {
         if(!checkName(name)) {
             browser && alert("-- Name must start with a letter\n" +
             "-- Name must be 3-12 characters\n" + 
             "-- Name can include numbers and underscores")
         }  
         else {
+            // const socket = io("https://trivia-rush-gameserver.herokuapp.com/");
+            let sock = io("ws://localhost:5000");
+            sock.emit("message", "connection");
+            socketStore.set(sock);
+            let s = {};
+            socketStore.subscribe(socket => s = socket);
+            let numTries = 0;
+            while (!s.connected && numTries <= 10){
+                await new Promise(r => setTimeout(r, .200));
+                numTries += 1
+            }
+            if (!s.connected) {
+                alert("cant connect socket please try again later");
+                return;
+            }
             playerObject.name = name;
-            initializeSocketStuff(socket);
-            socket.emit("enterQueue", playerObject);
+            initializeSocketStuff(s);
+            s.emit("enterQueue", playerObject);
                         
             console.log(playerObject);
 
             goto("loading");
         }
     }
-    
 </script>
 <body class="Aligner">
     <div class="">

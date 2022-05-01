@@ -13,16 +13,18 @@ export const stateStore = writable({
     number: {}
 });
 
-export const socketStore = readable({}, set => {
+export const socketStore = writable({}, set => {
     if (browser) {
-        const socket = io("https://trivia-rush-gameserver.herokuapp.com/");
+        // const socket = io("https://trivia-rush-gameserver.herokuapp.com/");
+        const socket = io("ws://localhost:5000");
+
         socket.emit("message", "connection");
         set(socket)
         return () => { socket.close() };
     }
-    return () => {};
+    return () => {}; 
 });
-
+ 
 // export const opponent = writable(
 //     browser && (sessionStorage.getItem("opponent")) || ""
 // )
@@ -30,7 +32,7 @@ export const socketStore = readable({}, set => {
 
 // export const setPlayer = (value) => {
 //     player.update(() => {return value});
-// };
+// }; 
 
 // import { readable } from "svelte/store";
 
