@@ -20,7 +20,7 @@
     }
     stateVal = get(stateStore);
     const progress = tweened(0, {
-		duration: 30000,
+		duration: 24500,
 		easing: p=> {return p;} 
 	});
     let background = [
