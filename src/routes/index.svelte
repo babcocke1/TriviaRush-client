@@ -32,8 +32,8 @@
         }  
         else {
             console.log("ayo")
-            // let sock = io("https://trivia-rush-gameserver.herokuapp.com/");
-            let sock = io("ws://localhost:5000");
+            let sock = io("https://trivia-rush-gameserver.herokuapp.com/");
+            // let sock = io("ws://localhost:5000");
             sock.emit("message", "client?");
             socketStore.set(sock);
             let s = {};

@@ -24,3 +24,4 @@ import { get } from "svelte/store";
     </div>
 </div> -->
 <h2> Game Over </h2>
+<p>You {stateVal.text == "win" ? "win" : "suck"}</p>

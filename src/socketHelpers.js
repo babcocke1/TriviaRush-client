@@ -51,12 +51,12 @@ export const initializeSocketStuff = (socket) => {
         stateStore.set(stateVal);
         goto("score");
     });
-    socket.on("gameover", (question) => {
+    socket.on("gameover", (go) => {
     let stateVal = {
         currentState: "GameOver",
-        you: question.you,
-        opponent: question.opponent,
-        text: "",
+        you: go.you,
+        opponent: go.opponent,
+        text: go.text,
         answers: "",
         number: ""
     };
